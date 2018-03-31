@@ -74,3 +74,36 @@ class CanvasBlock {
         this.state.startUpdating(startcb)
     }
 }
+class CanvasBlockContainer {
+    blocks : CanvasBlock[] = []
+    state : BlocksStateContainer = new BlocksStateContainer(colors.length)
+    constructor() {
+        this.init()
+    }
+    init() {
+        var i : number = 0
+        for (; i < colors.length; i++) {
+            this.blocks.push(new CanvasBlock(i))
+        }
+    }
+    draw(context : CanvasRenderingContext2D) {
+        const w : number = window.innerWidth / (2 * colors.length)
+        const h : number = window.innerHeight
+        this.blocks.forEach ((block) => {
+            block.draw(context, w, h)
+        })
+    }
+    update(stopcb : Function) {
+        this.state.executeCB((j : number) => {
+            this.blocks[j].update(() => {
+                this.state.incrementCounter()
+                stopcb()
+            })
+        })
+    }
+    startUpdating(startcb : Function) {
+        this.state.executeCB((j : number) => {
+            this.blocks[j].startUpdating(startcb)
+        })
+    }
+}

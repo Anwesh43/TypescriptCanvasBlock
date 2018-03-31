@@ -35,3 +35,20 @@ class BlocksAnimator {
         }
     }
 }
+class BlocksStateContainer {
+    private j : number = 0
+    private dir : number = 1
+    constructor(private n : number) {
+
+    }
+    incrementCounter() {
+        this.j += this.dir
+        if (this.j == this.n || this.j == -1) {
+            this.dir *= -1
+            this.j += this.dir
+        }
+    }
+    executeCB(cb : Function) {
+        cb(this.j)
+    }
+}

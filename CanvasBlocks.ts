@@ -138,3 +138,7 @@ class CanvasBlockStage {
         }
     }
 }
+
+const stage : CanvasBlockStage = CanvasBlockStage()
+stage.draw()
+stage.handleTap()

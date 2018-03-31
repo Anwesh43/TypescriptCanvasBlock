@@ -1,3 +1,4 @@
+const colors : string[] = ["#673AB7", "#009688", "#f44336", "#FF5722","#ef5350", "#1E88E5"];
 class BlockState {
     public scale : number = 0;
     private dir : number = 0;
@@ -50,5 +51,26 @@ class BlocksStateContainer {
     }
     executeCB(cb : Function) {
         cb(this.j)
+    }
+}
+class CanvasBlock {
+    private state : BlockState = new BlockState()
+    constructor(private i : number) {
+
+    }
+    draw(context : CanvasRenderingContext2D, w : number, h : number) {
+        const factor : number = this.i%2
+        const hGap : number = (h - w) * (factor)
+        context.save()
+        context.translate(w * this.i, hGap + hGap * (1 - 2 * factor))
+        context.fillStyle = colors[this.i]
+        context.fillRect(0, 0, w, w)
+        context.restore()
+    }
+    update(stopcb : Function) {
+        this.state.update(stopcb)
+    }
+    startUpdating(startcb : Function) {
+        this.state.startUpdating(startcb)
     }
 }

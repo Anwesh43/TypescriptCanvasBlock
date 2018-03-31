@@ -5,10 +5,12 @@ class BlockState {
     private prevScale : number = 0;
     update(stopcb : Function) {
         this.scale += 0.1 * this.dir;
+        console.log(this.scale)
         if (Math.abs(this.scale - this.prevScale) > 1) {
             this.scale = this.prevScale + this.dir
             this.dir = 0
             this.prevScale = this.scale
+            stopcb()
         }
     }
     startUpdating(startcb : Function) {
@@ -37,8 +39,8 @@ class BlocksAnimator {
     }
 }
 class BlocksStateContainer {
-    private j : number = 0
-    private dir : number = 1
+    private j : number = 0;
+    private dir : number = 1;
     constructor(private n : number) {
 
     }
@@ -62,7 +64,7 @@ class CanvasBlock {
         const factor : number = this.i%2
         const hGap : number = (h - w) * (factor)
         context.save()
-        context.translate(w * this.i, hGap + hGap * (1 - 2 * factor))
+        context.translate(w * this.i, hGap + (h - w) * (1 - 2 * factor) * this.state.scale)
         context.fillStyle = colors[this.i]
         context.fillRect(0, 0, w, w)
         context.restore()
@@ -112,17 +114,15 @@ class CanvasBlockStage {
     private context : CanvasRenderingContext2D;
     private container : CanvasBlockContainer = new CanvasBlockContainer();
     private animator : BlocksAnimator = new BlocksAnimator()
-    constructor() {
-        this.init()
-    }
     init() {
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
-        this.context.fillStyle = '#212121'
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
         this.context = this.canvas.getContext('2d')
+        document.body.appendChild(this.canvas)
     }
     draw() {
+        this.context.fillStyle = '#212121'
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
         this.container.draw(this.context)
     }
     handleTap() {
@@ -139,6 +139,7 @@ class CanvasBlockStage {
     }
 }
 
-const stage : CanvasBlockStage = CanvasBlockStage()
+const stage : CanvasBlockStage = new CanvasBlockStage()
+stage.init()
 stage.draw()
 stage.handleTap()

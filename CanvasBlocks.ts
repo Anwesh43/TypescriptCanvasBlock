@@ -107,3 +107,34 @@ class CanvasBlockContainer {
         })
     }
 }
+class CanvasBlockStage {
+    private canvas : HTMLCanvasElement = document.createElement('canvas');
+    private context : CanvasRenderingContext2D;
+    private container : CanvasBlockContainer = new CanvasBlockContainer();
+    private animator : BlocksAnimator = new BlocksAnimator()
+    constructor() {
+        this.init()
+    }
+    init() {
+        this.canvas.width = window.innerWidth
+        this.canvas.height = window.innerHeight
+        this.context.fillStyle = '#212121'
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
+        this.context = this.canvas.getContext('2d')
+    }
+    draw() {
+        this.container.draw(this.context)
+    }
+    handleTap() {
+        this.canvas.onmousedown = (event) => {
+            this.container.startUpdating(() => {
+                this.animator.start(() => {
+                    this.draw()
+                    this.container.update(() => {
+                        this.animator.stop()
+                    })
+                })
+            })
+        }
+    }
+}
